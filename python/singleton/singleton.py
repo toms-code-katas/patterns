@@ -1,12 +1,26 @@
-class Singleton:
+class BaseSingleton:
+
+    def __init__(self):
+        print("BaseSingleton.__init__")
+
+
+class Singleton(BaseSingleton):
 
     __instance = None
 
+    def __init__(self):
+        print("Singleton.__init__, do nothing")     # This method might be called multiple times
+
     def __new__(cls):
         if not cls.__instance:
-            cls._instance = super(Singleton, cls).__new__(cls)
+            cls.__instance = super(Singleton, cls).__new__(cls)
+            super(Singleton, cls.__instance).__init__()
             # Initialize the instance here
+            cls.__instance.__message = "Hello, world!"
         return cls.__instance
+
+    def get_message(self):
+        return self.__message
 
 
 if __name__ == '__main__':
@@ -15,6 +29,9 @@ if __name__ == '__main__':
 
     # Create the second instance
     s2 = Singleton()
+
+    print(s1.get_message())
+    print(s2.get_message())
 
     # Check if the two instances are the same
     print(s1 is s2)     # True
